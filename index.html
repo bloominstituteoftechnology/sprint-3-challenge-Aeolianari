@@ -18,7 +18,6 @@
     .widget p {
       font-style: italic;
     }
-
   </style>
 </head>
 
@@ -58,7 +57,39 @@
       // 🧠 Implement a `getAllReversed` method which returns the ints in reverse order
       // ❗ WARNING: except for `getAllReversed`, methods must respect the order of the integers
       // ❗ WARNING: note that none of the methods actually mutate the `ints` property
+      constructor(...ints) {
+        this.ints = ints
+      }
 
+      getAll() {
+        return this.ints
+      }
+      getEvens() {
+        return this.ints.filter(num => num % 2 === 0)
+      }
+      getNegatives() {
+        return this.ints.filter(num => num < 0)
+      }
+      getAllSquared() {
+        return this.ints.map(num => num * num)
+      }
+      pop() {
+        return this.ints.pop()
+      }
+      push(num) {
+        this.ints.push(num)
+        return this.ints
+      }
+      getEveryNth(n) {
+        const result = []
+        for (let i = 0; i < this.ints.length; i += n) {
+          result.push(this.ints[i])
+        }
+        return result
+      }
+      getAllReversed() {
+        return this.ints.slice().reverse()
+      }
     }
 
     // 👉 CHALLENGE 2 NerfGun
@@ -76,7 +107,33 @@
       //      * When engaging the safety, return "Safety enabled!"
       //      * When disengaging the safety, return "Safety disabled!"
       // 🌟 HINT: instances need to keep track of their maximum capacity as well as their current capacity
-
+      constructor(totalProjectiles) {
+        this.maxCapacity = totalProjectiles
+        this.currentCapacity = totalProjectiles
+        this.safetyOn = true
+      }
+      shoot() {
+        if (this.currentCapacity > 0 && !this.safetyOn) {
+          this.currentCapacity--
+          return "Bang!"
+        } else {
+          return "Click!"
+        }
+      }
+      reload(num) {
+        if (typeof num !== 'number' || num <= 0) {
+          return "Error reloading!"
+        }
+        this.currentCapacity += num
+        if (this.currentCapacity > this.maxCapacity) {
+          this.currentCapacity = this.maxCapacity
+        }
+        return `${this.currentCapacity} projectiles left!`
+      }
+      toggleSafety() {
+        this.safetyOn = !this.safetyOn
+        return this.safetyOn ? "Safety enabled!" : "Safety disabled!"
+      }
     }
 
     // 👉 CHALLENGE 3 EBook
@@ -95,7 +152,20 @@
       //    ebook.next() // returns null
       // 🌟 HINT: remember about the `slice` method which strings and arrays have
       // ❗ Feel free to implement `back`, although this is not required nor graded
-
+      constructor(text, chars) {
+        this.text = text
+        this.chars = chars
+        this.currentPage = 0;
+      }
+      next() {
+        if (this.currentPage * this.chars >= this.text.length) {
+          return null
+        }
+        const start = this.currentPage * this.chars
+        const end = start + this.chars
+        this.currentPage++
+        return this.text.slice(start, end)
+      }
     }
 
     // 👉 CHALLENGE 4 AntFarm
@@ -130,7 +200,36 @@
       //      console.log(list) // prints ["a"]
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
+      constructor(...ants) {
+        this.ants = ants.map(name => ({ name: name, health: 100 }))
+      }
 
+
+      work() {
+        if (this.ants.length === 0) {
+          return "No ants here. Did you work them to death?"
+        }
+        let startingAntCount = this.ants.length
+
+        this.ants = this.ants.map(ant => {
+          ant.health -= 20
+          return ant
+        }).filter(ant => ant.health > 0)
+        return `${startingAntCount} ants starting work!`
+      }
+
+
+      feed(name) {
+        let found = false
+        this.ants = this.ants.map(ant => {
+          if (ant.name === name) {
+            ant.health += 15
+            found = true
+          }
+          return ant
+        })
+        return found ? "Yum!" : `${name} not found!`
+      }
     }
 
     // 🧪 TESTS, do not make any changes below this line ===================
